@@ -1,0 +1,7 @@
+node_modules/
+dist/
+.env
+.vscode/
+.DS_Store
+Guia_proyecto_Cloud.md
+Guia_proyecto_DeepSeek.md
