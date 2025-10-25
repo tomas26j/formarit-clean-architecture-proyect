@@ -1,5 +1,5 @@
 {
-  "name": "proyecto-final_formar-it",
+  "name": "hotel-reservation-system",
   "version": "1.0.0",
   "main": "index.js",
   "private": true,
@@ -8,14 +8,21 @@
     "apps/*"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "yarn workspaces run build"
+    "test": "yarn workspaces run test",
+    "build": "yarn workspaces run build",
+    "dev": "yarn workspaces run dev",
+    "lint": "yarn workspaces run lint",
+    "type-check": "yarn workspaces run type-check"
   },
   "author": "Tomas Riera",
-  "license": "ISC",
-  "description": "",
+  "license": "MIT",
+  "description": "Sistema de gestión de reservas de hotel con DDD y arquitectura hexagonal",
   "devDependencies": {
-    "@types/node": "^24.3.0",
-    "typescript": "^5.9.3"
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0",
+    "eslint": "^8.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0"
   }
 }

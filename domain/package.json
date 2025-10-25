@@ -1,16 +1,27 @@
 {
-    "name": "demo-domain",
-    "version": "1.0.0",
-    "main": "dist/index.js",
-    "type": "module",
-    "scripts": {
-      "build": "tsc -p ."
-    },
-    "license": "MIT",
-    "devDependencies": {
-      "vitest": "^3.2.4"
-    },
-    "dependencies": {
-      "@faker-js/faker": "^10.0.0"
-    }
+  "name": "@hotel/domain",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src/",
+    "type-check": "tsc --noEmit",
+    "dev": "tsc --watch"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0",
+    "@types/node": "^20.0.0",
+    "eslint": "^8.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^10.0.0"
+  }
 }
