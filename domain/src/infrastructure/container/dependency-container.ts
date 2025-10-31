@@ -108,5 +108,5 @@ export const configureContainer = (): void => {
   container.register('generarId', DependencyFactory.createGenerarId());
   
   // Nota: Los repositorios y servicios de aplicación deben ser registrados
-  // por la capa de infraestructura específica (base de datos, APIs externas, etc.)
+  // por la capa de infraestructura específica (base de datos, APIs externas, etc.
 };

@@ -34,7 +34,7 @@ export class EjemploUsoReserva {
   }
 
   /**
-   * Ejemplo de creación de reserva exitosa
+   * Ejemplo de creación de reserva exitosa.
    */
   async crearReservaExitosa(): Promise<void> {
     const command: CrearReservaDTO = {

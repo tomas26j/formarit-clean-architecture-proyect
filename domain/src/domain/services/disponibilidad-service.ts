@@ -1,6 +1,8 @@
 /**
  * Servicio de dominio para verificar disponibilidad
  * Define las operaciones de negocio relacionadas con disponibilidad
+ * 
+ * Esta interfaz debe ser implementada en la capa de infraestructura
  */
 
 import { Result } from "../../shared/types/result.js";
@@ -41,3 +43,4 @@ export interface ServicioDisponibilidad {
     excluirReservaId?: string
   ): Promise<Result<boolean, DomainError>>;
 }
+
