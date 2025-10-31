@@ -13,9 +13,10 @@ import { notFoundHandler } from './middleware/not-found-handler.js';
 import { authMiddleware } from './middleware/auth.js';
 import { loggingMiddleware } from './middleware/logging.js';
 
-import { reservasRouter } from './routes/reservas.js';
-import { habitacionesRouter } from './routes/habitaciones.js';
-import { authRouter } from './routes/auth.js';
+import { crearDependencias, BackendDependencies } from './infrastructure/dependencies.js';
+import { crearReservasRouter } from './routes/reservas.js';
+import { crearHabitacionesRouter } from './routes/habitaciones.js';
+import { crearAuthRouter } from './routes/auth.js';
 import { healthRouter } from './routes/health.js';
 
 // Cargar variables de entorno
@@ -50,16 +51,19 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Middleware de logging personalizado
 app.use(loggingMiddleware);
 
+// Inicializar dependencias del sistema
+const dependencias = crearDependencias();
+
 // Rutas públicas
 app.use('/api/health', healthRouter);
-app.use('/api/auth', authRouter);
+app.use('/api/auth', crearAuthRouter(dependencias));
 
 // Middleware de autenticación para rutas protegidas
 app.use('/api', authMiddleware);
 
-// Rutas protegidas
-app.use('/api/reservas', reservasRouter);
-app.use('/api/habitaciones', habitacionesRouter);
+// Rutas protegidas (reciben dependencias)
+app.use('/api/reservas', crearReservasRouter(dependencias));
+app.use('/api/habitaciones', crearHabitacionesRouter(dependencias));
 
 // Middlewares de manejo de errores
 app.use(notFoundHandler);

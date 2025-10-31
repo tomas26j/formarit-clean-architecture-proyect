@@ -336,14 +336,21 @@ export const crearRepositorioUsuarios = (inicializarDatos: boolean = true): Repo
   // Se puede usar externamente cuando se crea un usuario
 };
 
-// Exportar función helper
-export const guardarContraseñaUsuario = async (
-  repositorio: RepositorioUsuarios,
-  usuario: Usuario,
-  password: string
-): Promise<void> => {
-  // Esta función debería ser llamada después de guardar un usuario
-  // Para guardar la contraseña hasheada
-  // Por ahora, la lógica está en el repositorio interno
+/**
+ * Función helper para guardar contraseña de un usuario
+ * Esta función accede al Map interno de contraseñas para guardar el hash
+ * 
+ * Nota: Esta es una solución temporal que requiere acceso al Map interno.
+ * En una implementación real con base de datos, esto estaría mejor encapsulado.
+ */
+export const crearHelperGuardarContraseña = (
+  repositorio: RepositorioUsuarios
+): ((email: string, password: string) => Promise<void>) => {
+  return async (email: string, password: string): Promise<void> => {
+    // Como el Map de contraseñas es interno, necesitamos una forma de acceder
+    // Por ahora, usamos bcrypt directamente y guardamos en el Map compartido
+    const hash = await bcrypt.hash(password, 10);
+    contraseñas.set(email, hash);
+  };
 };
 
