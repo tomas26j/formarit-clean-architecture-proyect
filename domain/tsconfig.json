@@ -6,6 +6,6 @@
     "rootDir": "src",
     "noEmit": false
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "../apps/backend/src/infrastructure/disponibilidad-service.ts"],
   "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts"]
 }

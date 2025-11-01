@@ -4,7 +4,7 @@
  */
 
 import { Result } from "../../shared/types/result.js";
-import { DomainError } from "../../shared/types/domain-errors.js";
+import { DomainError, EntityNotFoundError, BusinessRuleError } from "../../shared/types/domain-errors.js";
 import { Reserva } from "../entities/reserva.js";
 import { CrearReservaDTO, ReservaDTO } from "../../application/dtos/reserva-dto.js";
 import { ReservaService } from "../services/reserva-service.js";
@@ -12,7 +12,7 @@ import { ReservaValidator } from "../../application/validators/reserva-validator
 import { ReservaMapper } from "../../application/mappers/reserva-mapper.js";
 import { RepositorioReservas } from "../../infrastructure/repositories/reserva-repository";
 import { RepositorioHabitaciones } from "../../infrastructure/repositories/habitacion-repository";
-import { ServicioDisponibilidad } from "../services/disponibilidad-service";
+import { ServicioDisponibilidad } from "../services/disponibilidad-service.js";
 import { ServicioCalculoPrecio } from "../services/precio-service";
 
 // Dependencias del caso de uso
@@ -49,12 +49,12 @@ export const crearReserva = async (
 
   const habitacion = habitacionResult.data;
   if (!habitacion) {
-    return Result.failure(new DomainError('Habitación no encontrada'));
+    return Result.failure(new EntityNotFoundError('Habitación no encontrada'));
   }
 
-  // 3. Verificar que la habitación puede reservarse
-  if (!habitacion.puedeReservarse()) {
-    return Result.failure(new DomainError('La habitación no está disponible para reservas'));
+  // 3. Verificar que la habitación está activa
+  if (!habitacion.activa) {
+    return Result.failure(new BusinessRuleError('La habitación no está disponible para reservas'));
   }
 
   // 4. Verificar disponibilidad
@@ -68,12 +68,12 @@ export const crearReserva = async (
   }
 
   if (!disponibilidadResult.data) {
-    return Result.failure(new DomainError('Habitación no disponible para las fechas solicitadas'));
+    return Result.failure(new BusinessRuleError('Habitación no disponible para las fechas solicitadas'));
   }
 
   // 5. Verificar capacidad de la habitación
   if (command.numeroHuespedes > habitacion.tipo.capacidad) {
-    return Result.failure(new DomainError(
+    return Result.failure(new BusinessRuleError(
       `La habitación solo puede alojar ${habitacion.tipo.capacidad} huéspedes`
     ));
   }

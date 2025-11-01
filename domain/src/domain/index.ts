@@ -21,3 +21,7 @@ export * from './services/precio-service';
 
 // Casos de uso
 export * from './use-cases/crear-reserva';
+export * from './use-cases/confirmar-reserva';
+export * from './use-cases/cancelar-reserva';
+export * from './use-cases/consultar-disponibilidad';
+export * from './use-cases/autenticar-usuario';

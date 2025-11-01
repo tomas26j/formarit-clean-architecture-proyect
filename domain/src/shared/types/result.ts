@@ -63,6 +63,12 @@ export class Failure<E> {
 export const success = <T>(data: T): Success<T> => new Success(data);
 export const failure = <E>(error: E): Failure<E> => new Failure(error);
 
+// Namespace para métodos estáticos de Result
+export namespace Result {
+  export const success = <T>(data: T): Success<T> => new Success(data);
+  export const failure = <E>(error: E): Failure<E> => new Failure(error);
+}
+
 // Función para convertir promesas que pueden fallar en Results
 export const tryCatch = async <T>(
   fn: () => Promise<T>
