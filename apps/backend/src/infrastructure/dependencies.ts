@@ -11,10 +11,10 @@ import { crearRepositorioUsuarios, crearHelperGuardarContraseña } from "./repos
 // Servicios
 import { crearServicioDisponibilidad } from "./disponibilidad-service-impl.js";
 
-// Implementaciones del dominio (usando clases por ahora, se convertirán a funciones en Fase 3)
-import { ReservaServiceImpl } from "@hotel/domain/src/infrastructure/services/reserva-service-impl.js";
-import { ReservaValidatorImpl } from "@hotel/domain/src/application/validators/reserva-validator.js";
-import { ReservaMapperImpl } from "@hotel/domain/src/application/mappers/reserva-mapper.js";
+// Implementaciones funcionales del dominio
+import { crearReservaService } from "@hotel/domain/src/infrastructure/services/reserva-service-impl.js";
+import { crearReservaValidator } from "@hotel/domain/src/application/validators/reserva-validator.js";
+import { crearReservaMapper } from "@hotel/domain/src/application/mappers/reserva-mapper.js";
 
 // Interfaces y tipos
 import { RepositorioReservas } from "@hotel/domain/src/infrastructure/repositories/reserva-repository.js";
@@ -319,10 +319,10 @@ export const crearDependencias = (): BackendDependencies => {
   
   const servicioPrecios = crearServicioCalculoPrecio();
 
-  // 3. Crear servicios y utilidades del dominio
-  const reservaService = new ReservaServiceImpl();
-  const reservaValidator = new ReservaValidatorImpl();
-  const reservaMapper = new ReservaMapperImpl();
+  // 3. Crear servicios y utilidades del dominio usando funciones funcionales
+  const reservaService = crearReservaService();
+  const reservaValidator = crearReservaValidator();
+  const reservaMapper = crearReservaMapper();
   const generarIdFn = generarId;
 
   // 4. Crear dependencias para el caso de uso crearReserva

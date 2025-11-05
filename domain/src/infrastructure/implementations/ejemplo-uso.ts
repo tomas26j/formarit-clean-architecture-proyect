@@ -6,7 +6,7 @@
 import { crearReserva } from '../../domain/use-cases/crear-reserva.js';
 import { CrearReservaDTO } from '../../application/dtos/reserva-dto.js';
 import { CrearReservaDependencies } from '../../domain/use-cases/crear-reserva.js';
-import { configureContainer, container } from '../container/dependency-container.js';
+import { crearDependenciasDominio } from '../container/dependency-container.js';
 import { Result } from '../../shared/types/result.js';
 import { DomainError } from '../../shared/types/domain-errors.js';
 
@@ -17,19 +17,21 @@ export class EjemploUsoReserva {
   private dependencies: CrearReservaDependencies;
 
   constructor() {
-    // Configurar el contenedor de dependencias
-    configureContainer();
+    // Crear dependencias del dominio usando funciones funcionales
+    const dependenciasDominio = crearDependenciasDominio();
     
-    // Obtener las dependencias del contenedor
+    // Nota: Los repositorios y servicios de aplicación deben ser proporcionados
+    // por la capa de infraestructura específica. Aquí usamos mocks para el ejemplo.
     this.dependencies = {
-      reservaService: container.resolve('reservaService'),
-      reservaValidator: container.resolve('reservaValidator'),
-      reservaMapper: container.resolve('reservaMapper'),
-      repositorioReservas: container.resolve('repositorioReservas'),
-      repositorioHabitaciones: container.resolve('repositorioHabitaciones'),
-      servicioDisponibilidad: container.resolve('servicioDisponibilidad'),
-      servicioPrecios: container.resolve('servicioPrecios'),
-      generarId: container.resolve('generarId')
+      reservaService: dependenciasDominio.reservaService,
+      reservaValidator: dependenciasDominio.reservaValidator,
+      reservaMapper: dependenciasDominio.reservaMapper,
+      // Estos deben ser proporcionados por la infraestructura real
+      repositorioReservas: {} as any,
+      repositorioHabitaciones: {} as any,
+      servicioDisponibilidad: {} as any,
+      servicioPrecios: {} as any,
+      generarId: dependenciasDominio.generarId
     };
   }
 

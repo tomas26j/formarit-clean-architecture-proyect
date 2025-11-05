@@ -1,15 +1,22 @@
 /**
- * Contenedor de dependencias
+ * Contenedor de dependencias funcional
  * Centraliza la configuración y creación de todas las dependencias del sistema
+ * 
+ * @deprecated Este archivo se mantiene por compatibilidad. 
+ * Se recomienda usar las funciones de creación directas en lugar del contenedor.
+ * Para el backend, usar apps/backend/src/infrastructure/dependencies.ts
  */
 
-import { ReservaService } from "../../domain/services/reserva-service";
-import { ReservaValidator } from "../../application/validators/reserva-validator";
-import { ReservaMapper } from "../../application/mappers/reserva-mapper";
-import { RepositorioReservas } from "../repositories/reserva-repository";
-import { RepositorioHabitaciones } from "../repositories/habitacion-repository";
-import { ServicioDisponibilidad } from "../../domain/services/disponibilidad-service";
-import { ServicioCalculoPrecio } from "../../domain/services/precio-service";
+import { ReservaService } from "../../domain/services/reserva-service.js";
+import { ReservaValidator } from "../../application/validators/reserva-validator.js";
+import { ReservaMapper } from "../../application/mappers/reserva-mapper.js";
+import { RepositorioReservas } from "../repositories/reserva-repository.js";
+import { RepositorioHabitaciones } from "../repositories/habitacion-repository.js";
+import { ServicioDisponibilidad } from "../../domain/services/disponibilidad-service.js";
+import { ServicioCalculoPrecio } from "../../domain/services/precio-service.js";
+import { crearReservaService } from "../services/reserva-service-impl.js";
+import { crearReservaValidator } from "../../application/validators/reserva-validator.js";
+import { crearReservaMapper } from "../../application/mappers/reserva-mapper.js";
 
 // Interfaces para las dependencias
 export interface Dependencies {
@@ -34,6 +41,10 @@ export interface Dependencies {
   generarId: () => string;
 }
 
+/**
+ * @deprecated Usar funciones de creación directas en lugar del contenedor
+ * Esta clase se mantiene solo por compatibilidad temporal
+ */
 export class DependencyContainer {
   private dependencies: Partial<Dependencies> = {};
 
@@ -67,25 +78,27 @@ export class DependencyContainer {
   }
 }
 
-// Instancia global del contenedor
+// Instancia global del contenedor (deprecated)
+/**
+ * @deprecated Usar funciones de creación directas
+ */
 export const container = new DependencyContainer();
 
-// Factory para crear dependencias
+/**
+ * @deprecated Usar funciones de creación directas (crearReservaService, crearReservaValidator, etc.)
+ * Esta clase se mantiene solo por compatibilidad temporal
+ */
 export class DependencyFactory {
   static createReservaService(): ReservaService {
-    // Importar la implementación concreta
-    const { ReservaServiceImpl } = require("../services/reserva-service-impl");
-    return new ReservaServiceImpl();
+    return crearReservaService();
   }
 
   static createReservaValidator(): ReservaValidator {
-    const { ReservaValidatorImpl } = require("../../application/validators/reserva-validator");
-    return new ReservaValidatorImpl();
+    return crearReservaValidator();
   }
 
   static createReservaMapper(): ReservaMapper {
-    const { ReservaMapperImpl } = require("../../application/mappers/reserva-mapper");
-    return new ReservaMapperImpl();
+    return crearReservaMapper();
   }
 
   static createGenerarId(): () => string {
@@ -93,7 +106,10 @@ export class DependencyFactory {
   }
 }
 
-// Configuración por defecto del contenedor
+/**
+ * Configuración por defecto del contenedor (deprecated)
+ * @deprecated Usar funciones de creación directas
+ */
 export const configureContainer = (): void => {
   // Registrar servicios de dominio
   container.register('reservaService', DependencyFactory.createReservaService());
@@ -109,4 +125,17 @@ export const configureContainer = (): void => {
   
   // Nota: Los repositorios y servicios de aplicación deben ser registrados
   // por la capa de infraestructura específica (base de datos, APIs externas, etc.
+};
+
+/**
+ * Función funcional para crear dependencias básicas del dominio
+ * Esta es la forma recomendada de crear dependencias
+ */
+export const crearDependenciasDominio = () => {
+  return {
+    reservaService: crearReservaService(),
+    reservaValidator: crearReservaValidator(),
+    reservaMapper: crearReservaMapper(),
+    generarId: () => `reserva_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+  };
 };
