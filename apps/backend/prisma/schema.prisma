@@ -1,0 +1,111 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Modelo de Usuario
+model Usuario {
+  id        String   @id @default(uuid())
+  nombre    String
+  email     String   @unique
+  passwordHash String? // Opcional para usuarios que no requieren autenticación
+  rol       String   // Enum: huesped, recepcionista, gerente, admin
+  activo    Boolean  @default(true)
+  clienteId String?  // Opcional: vincula a datos de cliente externo
+  telefono  String?
+  createdAt DateTime @default(now()) @map("fecha_creacion")
+  updatedAt DateTime @updatedAt @map("fecha_actualizacion")
+  ultimoAcceso DateTime?
+
+  // Relaciones
+  reservas  Reserva[]
+
+  @@index([email])
+  @@index([rol])
+  @@index([activo])
+  @@index([clienteId])
+  @@map("usuarios")
+}
+
+// Modelo de Tipo de Habitación
+model TipoHabitacion {
+  id          String   @id @default(uuid())
+  nombre      String   @unique
+  descripcion String   @db.Text
+  capacidad   Int
+  amenidades  Json     // Array de strings como JSON
+  createdAt   DateTime @default(now()) @map("fecha_creacion")
+  updatedAt   DateTime @updatedAt @map("fecha_actualizacion")
+
+  // Relaciones
+  habitaciones Habitacion[]
+
+  @@index([nombre])
+  @@index([capacidad])
+  @@map("tipos_habitacion")
+}
+
+// Modelo de Habitación
+model Habitacion {
+  id         String   @id @default(uuid())
+  numero     String   @unique
+  tipoId     String
+  precioBase Float
+  moneda     String   @default("USD")
+  activa     Boolean  @default(true)
+  piso       Int
+  vista      String
+  createdAt  DateTime @default(now()) @map("fecha_creacion")
+  updatedAt  DateTime @updatedAt @map("fecha_actualizacion")
+
+  // Relaciones
+  tipo       TipoHabitacion @relation(fields: [tipoId], references: [id], onDelete: Restrict)
+  reservas   Reserva[]
+
+  @@index([numero])
+  @@index([tipoId])
+  @@index([activa])
+  @@index([piso])
+  @@index([activa, tipoId])
+  @@map("habitaciones")
+}
+
+// Modelo de Reserva
+model Reserva {
+  id                String   @id @default(uuid())
+  habitacionId      String
+  clienteId         String
+  checkIn           DateTime
+  checkOut          DateTime
+  estado            String   // Enum: pendiente, confirmada, checkin, checkout, cancelada
+  precioTotal       Float
+  moneda            String   @default("USD")
+  numeroHuespedes  Int
+  observaciones     String?  @db.Text
+  motivoCancelacion String?  @db.Text
+  createdAt         DateTime @default(now()) @map("fecha_creacion")
+  updatedAt         DateTime @updatedAt @map("fecha_actualizacion")
+
+  // Relaciones
+  habitacion Habitacion @relation(fields: [habitacionId], references: [id], onDelete: Restrict)
+  cliente    Usuario   @relation(fields: [clienteId], references: [id], onDelete: Restrict)
+
+  // Índices para optimizar consultas de disponibilidad y búsquedas frecuentes
+  @@index([habitacionId])
+  @@index([clienteId])
+  @@index([estado])
+  @@index([checkIn])
+  @@index([checkOut])
+  @@index([habitacionId, checkIn, checkOut]) // Índice compuesto para consultas de disponibilidad
+  @@index([estado, checkIn]) // Para buscar reservas pendientes/vencidas
+  @@index([clienteId, estado]) // Para buscar reservas de un cliente por estado
+  @@map("reservas")
+}
+

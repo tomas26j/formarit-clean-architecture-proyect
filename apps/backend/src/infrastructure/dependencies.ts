@@ -3,10 +3,12 @@
  * Centraliza la creación e inyección de todas las dependencias del sistema
  */
 
-// Repositorios
-import { crearRepositorioReservas } from "./repositories/reserva-repository-impl.js";
-import { crearRepositorioHabitaciones } from "./repositories/habitacion-repository-impl.js";
-import { crearRepositorioUsuarios, crearHelperGuardarContraseña } from "./repositories/usuario-repository-impl.js";
+// Repositorios - Usando Prisma
+import { crearPrismaReservaRepository } from "./repositories/prisma-reserva-repository.js";
+import { crearPrismaHabitacionRepository } from "./repositories/prisma-habitacion-repository.js";
+import { crearPrismaUsuarioRepository } from "./repositories/prisma-usuario-repository.js";
+import { prisma } from "./repositories/prisma-client.js";
+import bcrypt from 'bcryptjs';
 
 // Servicios
 import { crearServicioDisponibilidad } from "./disponibilidad-service-impl.js";
@@ -306,10 +308,10 @@ export interface BackendDependencies {
  * Esta es la función principal que debe llamarse al inicializar la aplicación
  */
 export const crearDependencias = (): BackendDependencies => {
-  // 1. Crear repositorios
-  const repositorioReservas = crearRepositorioReservas();
-  const repositorioHabitaciones = crearRepositorioHabitaciones(true); // Inicializar con datos de ejemplo
-  const repositorioUsuarios = crearRepositorioUsuarios(true); // Inicializar con datos de ejemplo
+  // 1. Crear repositorios usando Prisma
+  const repositorioReservas = crearPrismaReservaRepository();
+  const repositorioHabitaciones = crearPrismaHabitacionRepository();
+  const repositorioUsuarios = crearPrismaUsuarioRepository();
 
   // 2. Crear servicios
   const servicioDisponibilidad = crearServicioDisponibilidad({
@@ -387,7 +389,14 @@ export const crearDependencias = (): BackendDependencies => {
     autenticarUsuario(command, autenticarUsuarioDependencies);
 
   // Helper para guardar contraseña (necesario para registro de usuarios)
-  const guardarContraseñaFn = crearHelperGuardarContraseña(repositorioUsuarios);
+  // Usando Prisma directamente para actualizar el passwordHash
+  const guardarContraseñaFn = async (email: string, password: string): Promise<void> => {
+    const hash = await bcrypt.hash(password, 10);
+    await prisma.usuario.update({
+      where: { email },
+      data: { passwordHash: hash },
+    });
+  };
 
   // 6. Retornar todas las dependencias configuradas
   return {
