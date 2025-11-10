@@ -4,8 +4,8 @@
  */
 
 export abstract class DomainError extends Error {
-  abstract readonly code: string;
-  abstract readonly statusCode: number;
+  abstract get code(): string;
+  abstract get statusCode(): number;
 
   constructor(message: string, public readonly details?: Record<string, any>) {
     super(message);
@@ -15,35 +15,35 @@ export abstract class DomainError extends Error {
 
 // Errores de validación
 export class ValidationError extends DomainError {
-  readonly code = 'VALIDATION_ERROR';
-  readonly statusCode = 400;
+  get code(): string { return 'VALIDATION_ERROR'; }
+  get statusCode(): number { return 400; }
 }
 
 export class BusinessRuleError extends DomainError {
-  readonly code = 'BUSINESS_RULE_ERROR';
-  readonly statusCode = 422;
+  get code(): string { return 'BUSINESS_RULE_ERROR'; }
+  get statusCode(): number { return 422; }
 }
 
 // Errores de entidades
 export class EntityNotFoundError extends DomainError {
-  readonly code = 'ENTITY_NOT_FOUND';
-  readonly statusCode = 404;
+  get code(): string { return 'ENTITY_NOT_FOUND'; }
+  get statusCode(): number { return 404; }
 }
 
 export class EntityAlreadyExistsError extends DomainError {
-  readonly code = 'ENTITY_ALREADY_EXISTS';
-  readonly statusCode = 409;
+  get code(): string { return 'ENTITY_ALREADY_EXISTS'; }
+  get statusCode(): number { return 409; }
 }
 
 // Errores de reservas
 export class ReservationError extends DomainError {
-  readonly code = 'RESERVATION_ERROR';
-  readonly statusCode = 422;
+  get code(): string { return 'RESERVATION_ERROR'; }
+  get statusCode(): number { return 422; }
 }
 
 export class RoomNotAvailableError extends ReservationError {
-  readonly code = 'ROOM_NOT_AVAILABLE';
-  readonly statusCode = 409;
+  override get code(): string { return 'ROOM_NOT_AVAILABLE'; }
+  override get statusCode(): number { return 409; }
 
   constructor(message: string, details?: Record<string, any>) {
     super(message, details);
@@ -51,8 +51,8 @@ export class RoomNotAvailableError extends ReservationError {
 }
 
 export class InvalidReservationStateError extends ReservationError {
-  readonly code = 'INVALID_RESERVATION_STATE';
-  readonly statusCode = 422;
+  override get code(): string { return 'INVALID_RESERVATION_STATE'; }
+  override get statusCode(): number { return 422; }
 
   constructor(message: string, details?: Record<string, any>) {
     super(message, details);
@@ -61,13 +61,13 @@ export class InvalidReservationStateError extends ReservationError {
 
 // Errores de habitaciones
 export class RoomError extends DomainError {
-  readonly code = 'ROOM_ERROR';
-  readonly statusCode = 422;
+  get code(): string { return 'ROOM_ERROR'; }
+  get statusCode(): number { return 422; }
 }
 
 export class RoomCapacityExceededError extends RoomError {
-  readonly code = 'ROOM_CAPACITY_EXCEEDED';
-  readonly statusCode = 422;
+  override get code(): string { return 'ROOM_CAPACITY_EXCEEDED'; }
+  override get statusCode(): number { return 422; }
 
   constructor(message: string, details?: Record<string, any>) {
     super(message, details);
@@ -76,29 +76,29 @@ export class RoomCapacityExceededError extends RoomError {
 
 // Errores de usuarios
 export class UserError extends DomainError {
-  readonly code = 'USER_ERROR';
-  readonly statusCode = 422;
+  get code(): string { return 'USER_ERROR'; }
+  get statusCode(): number { return 422; }
 }
 
 export class UnauthorizedError extends DomainError {
-  readonly code = 'UNAUTHORIZED';
-  readonly statusCode = 401;
+  get code(): string { return 'UNAUTHORIZED'; }
+  get statusCode(): number { return 401; }
 }
 
 export class ForbiddenError extends DomainError {
-  readonly code = 'FORBIDDEN';
-  readonly statusCode = 403;
+  get code(): string { return 'FORBIDDEN'; }
+  get statusCode(): number { return 403; }
 }
 
 // Errores de infraestructura
 export class InfrastructureError extends DomainError {
-  readonly code = 'INFRASTRUCTURE_ERROR';
-  readonly statusCode = 500;
+  get code(): string { return 'INFRASTRUCTURE_ERROR'; }
+  get statusCode(): number { return 500; }
 }
 
 export class DatabaseError extends InfrastructureError {
-  readonly code = 'DATABASE_ERROR';
-  readonly statusCode = 500;
+  override get code(): string { return 'DATABASE_ERROR'; }
+  override get statusCode(): number { return 500; }
 
   constructor(message: string, details?: Record<string, any>) {
     super(message, details);
@@ -106,8 +106,8 @@ export class DatabaseError extends InfrastructureError {
 }
 
 export class ExternalServiceError extends InfrastructureError {
-  readonly code = 'EXTERNAL_SERVICE_ERROR';
-  readonly statusCode = 502;
+  override get code(): string { return 'EXTERNAL_SERVICE_ERROR'; }
+  override get statusCode(): number { return 502; }
 
   constructor(message: string, details?: Record<string, any>) {
     super(message, details);

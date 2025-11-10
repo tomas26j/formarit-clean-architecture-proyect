@@ -9,7 +9,7 @@ export interface Periodo {
 
 export interface PeriodoVO extends Periodo {
   readonly duracionNoches: number;
-  readonly esValido(): boolean;
-  readonly incluyeFecha(fecha: Date): boolean;
-  readonly seSolapaCon(otro: Periodo): boolean;
+  esValido(): boolean;
+  incluyeFecha(fecha: Date): boolean;
+  seSolapaCon(otro: Periodo): boolean;
 }

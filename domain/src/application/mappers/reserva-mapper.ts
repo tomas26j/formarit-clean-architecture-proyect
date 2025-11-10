@@ -154,21 +154,21 @@ export const schemaToEntity = (schema: ReservaSchema): Result<Reserva, Validatio
 /**
  * Convierte un DTO de actualización a un objeto parcial de entidad
  */
-export const updateDtoToPartialEntity = (dto: ActualizarReservaDTO): Partial<Reserva> => {
-  const partial: Partial<Reserva> = {
+export const updateDtoToPartialEntity = (dto: ActualizarReservaDTO): Partial<Omit<Reserva, 'id' | 'fechaCreacion'>> & { fechaActualizacion: Date } => {
+  const partial: Partial<Omit<Reserva, 'id' | 'fechaCreacion'>> & { fechaActualizacion: Date } = {
     fechaActualizacion: new Date()
   };
 
   if (dto.estado !== undefined) {
-    partial.estado = dto.estado;
+    (partial as any).estado = dto.estado;
   }
 
   if (dto.observaciones !== undefined) {
-    partial.observaciones = dto.observaciones;
+    (partial as any).observaciones = dto.observaciones;
   }
 
   if (dto.motivoCancelacion !== undefined) {
-    partial.motivoCancelacion = dto.motivoCancelacion;
+    (partial as any).motivoCancelacion = dto.motivoCancelacion;
   }
 
   return partial;

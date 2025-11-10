@@ -8,12 +8,12 @@ export interface Precio {
 }
 
 export interface PrecioVO extends Precio {
-  readonly esValido(): boolean;
-  readonly esMayorQue(otro: Precio): boolean;
-  readonly esMenorQue(otro: Precio): boolean;
-  readonly esIgualA(otro: Precio): boolean;
-  readonly sumar(otro: Precio): PrecioVO;
-  readonly restar(otro: Precio): PrecioVO;
-  readonly multiplicar(factor: number): PrecioVO;
-  readonly dividir(divisor: number): PrecioVO;
+  esValido(): boolean;
+  esMayorQue(otro: Precio): boolean;
+  esMenorQue(otro: Precio): boolean;
+  esIgualA(otro: Precio): boolean;
+  sumar(otro: Precio): PrecioVO;
+  restar(otro: Precio): PrecioVO;
+  multiplicar(factor: number): PrecioVO;
+  dividir(divisor: number): PrecioVO;
 }

@@ -30,6 +30,7 @@ export interface HabitacionDisponibleDTO {
   piso: number;
   vista: string;
   amenidades: string[];
+  activa: boolean;
 }
 
 export interface DisponibilidadDTO {
@@ -115,6 +116,7 @@ export const consultarDisponibilidad = async (
       piso: habitacion.piso,
       vista: habitacion.vista,
       amenidades: habitacion.tipo.amenidades,
+      activa: habitacion.activa,
     };
   });
 

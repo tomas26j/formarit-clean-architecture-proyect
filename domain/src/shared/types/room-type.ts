@@ -11,7 +11,7 @@ export interface TipoHabitacion {
 }
 
 export interface TipoHabitacionVO extends TipoHabitacion {
-  readonly esValido(): boolean;
-  readonly puedeAlojar(numeroHuespedes: number): boolean;
-  readonly tieneAmenidad(amenidad: string): boolean;
+  esValido(): boolean;
+  puedeAlojar(numeroHuespedes: number): boolean;
+  tieneAmenidad(amenidad: string): boolean;
 }

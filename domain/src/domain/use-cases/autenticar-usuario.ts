@@ -5,7 +5,7 @@
 
 import { Result } from "../../shared/types/result.js";
 import { DomainError, ValidationError, UnauthorizedError } from "../../shared/types/domain-errors.js";
-import { RepositorioUsuarios } from "../../../repositories/usuario-repository.js";
+import { RepositorioUsuarios } from "../../repositories/usuario-repository.js";
 import { Usuario, RolUsuario } from "../entities/usuario.js";
 
 // DTOs para el caso de uso
