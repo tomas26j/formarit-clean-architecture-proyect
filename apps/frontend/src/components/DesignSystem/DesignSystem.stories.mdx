@@ -1,0 +1,115 @@
+import { Meta } from '@storybook/blocks'
+
+<Meta title="Design System/Introducción" />
+
+# Sistema de Diseño - Hotel Reservation
+
+Bienvenido al sistema de diseño del frontend de reservas hoteleras. Este sistema está construido con **TailwindCSS** y **daisyUI**, siguiendo principios de diseño minimalista y coherente.
+
+## Filosofía
+
+El diseño se centra en:
+- **Claridad**: Interfaz limpia y fácil de entender
+- **Legibilidad**: Tipografía clara y contraste adecuado
+- **Consistencia**: Componentes reutilizables y patrones coherentes
+- **Accesibilidad**: Cumplimiento de WCAG 2.1 AA
+
+## Paleta de Colores
+
+### Tema: hotelMinimal
+
+Nuestro tema personalizado está diseñado para evocar calidez y profesionalismo, apropiado para el dominio de reservas hoteleras.
+
+#### Colores Primarios
+- **Primary** (`#C0A888`): Arena cálida - usado para acentos principales y CTAs
+- **Primary Focus** (`#A8926F`): Versión más oscura para estados hover/activos
+- **Primary Content** (`#FFFFFF`): Texto sobre fondos primary
+
+#### Colores Neutros
+- **Base 100** (`#FFFFFF`): Fondo principal
+- **Base 200** (`#F5F5F5`): Fondos secundarios
+- **Base 300** (`#E5E5E5`): Bordes sutiles
+- **Base Content** (`#1F2937`): Texto principal
+
+#### Colores de Acento
+- **Accent** (`#1E3A5F`): Azul profundo - CTAs importantes
+- **Accent Focus** (`#152A47`): Versión más oscura para hover
+
+#### Estados Semánticos
+- **Success** (`#10B981`): Confirmaciones y estados positivos
+- **Warning** (`#F59E0B`): Advertencias
+- **Error** (`#EF4444`): Errores y estados negativos
+- **Info** (`#3B82F6`): Información general
+
+## Tipografía
+
+- **Fuente principal**: `Inter` o stack de fuentes del sistema
+- **Tamaños**: Escala modular basada en Tailwind
+- **Pesos**: Regular (400), Medium (500), Semibold (600), Bold (700)
+
+## Espaciado
+
+Utilizamos la escala de espaciado de Tailwind (base 4px):
+- `xs`: 0.5rem (8px)
+- `sm`: 1rem (16px)
+- `md`: 1.5rem (24px)
+- `lg`: 2rem (32px)
+- `xl`: 3rem (48px)
+- `2xl`: 4rem (64px)
+
+## Componentes
+
+Nuestro sistema de componentes sigue la metodología **Atomic Design**:
+
+### Atoms (Componentes Básicos)
+Componentes fundamentales que no pueden dividirse más:
+- **Button**: Botones con variantes y tamaños
+- **Input**: Campos de entrada de texto
+- **Select**: Selectores dropdown
+- **Badge**: Etiquetas y estados
+- **Rating**: Sistema de calificación con estrellas
+- **Avatar**: Imágenes de perfil
+
+### Molecules (Componentes Compuestos)
+Combinaciones de atoms que forman componentes más complejos:
+- **SearchBar**: Barra de búsqueda completa
+- **GuestCounter**: Contador de huéspedes
+- **DatePickerRange**: Selector de rango de fechas
+- **RoomCard**: Tarjeta de habitación
+- **HotelCard**: Tarjeta de hotel
+- **PriceBreakdown**: Desglose de precios
+
+### Organisms (Componentes Complejos)
+Componentes complejos que combinan molecules y atoms:
+- **SearchPanel**: Panel completo de búsqueda
+- **ResultsList**: Lista de resultados con filtros
+- **HotelGallery**: Galería de imágenes
+- **BookingSummary**: Resumen de reserva
+- **ReservationList**: Lista de reservas
+
+## Uso de Componentes
+
+Todos los componentes están documentados en Storybook con:
+- **Props**: Descripción de todas las propiedades
+- **Variantes**: Diferentes estilos y estados
+- **Ejemplos**: Casos de uso comunes
+- **Tests**: Cobertura de testing
+
+## Accesibilidad
+
+Todos los componentes siguen las mejores prácticas de accesibilidad:
+- **ARIA labels** donde sea necesario
+- **Roles semánticos** correctos
+- **Navegación por teclado** completa
+- **Contraste de colores** adecuado (WCAG AA)
+- **Screen reader friendly**
+
+## Desarrollo
+
+Para desarrollar nuevos componentes:
+1. Crear el componente en su carpeta correspondiente
+2. Crear story en Storybook
+3. Agregar tests unitarios
+4. Documentar props y casos de uso
+5. Actualizar esta documentación si es necesario
+
