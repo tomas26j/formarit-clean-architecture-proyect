@@ -65,6 +65,7 @@ async function main() {
   console.log("🛏️  Creando habitaciones...");
 
   const habitaciones = [
+    // Habitaciones Individuales (Piso 1)
     {
       id: "habitacion-101",
       numero: "101",
@@ -86,6 +87,17 @@ async function main() {
       vista: "vista al jardín",
     },
     {
+      id: "habitacion-103",
+      numero: "103",
+      tipoId: tipoIndividual.id,
+      precioBase: 110.0,
+      moneda: "USD",
+      activa: true,
+      piso: 1,
+      vista: "vista al jardín",
+    },
+    // Habitaciones Dobles (Piso 2)
+    {
       id: "habitacion-201",
       numero: "201",
       tipoId: tipoDoble.id,
@@ -106,6 +118,27 @@ async function main() {
       vista: "vista al mar",
     },
     {
+      id: "habitacion-203",
+      numero: "203",
+      tipoId: tipoDoble.id,
+      precioBase: 160.0,
+      moneda: "USD",
+      activa: true,
+      piso: 2,
+      vista: "vista al mar",
+    },
+    {
+      id: "habitacion-204",
+      numero: "204",
+      tipoId: tipoDoble.id,
+      precioBase: 170.0,
+      moneda: "USD",
+      activa: true,
+      piso: 2,
+      vista: "vista panorámica",
+    },
+    // Suites (Piso 3)
+    {
       id: "habitacion-301",
       numero: "301",
       tipoId: tipoSuite.id,
@@ -114,6 +147,26 @@ async function main() {
       activa: true,
       piso: 3,
       vista: "vista panorámica",
+    },
+    {
+      id: "habitacion-302",
+      numero: "302",
+      tipoId: tipoSuite.id,
+      precioBase: 320.0,
+      moneda: "USD",
+      activa: true,
+      piso: 3,
+      vista: "vista panorámica",
+    },
+    {
+      id: "habitacion-303",
+      numero: "303",
+      tipoId: tipoSuite.id,
+      precioBase: 350.0,
+      moneda: "USD",
+      activa: true,
+      piso: 3,
+      vista: "vista al mar",
     },
   ];
 

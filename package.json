@@ -18,11 +18,19 @@
   "license": "MIT",
   "description": "Sistema de gestión de reservas de hotel con DDD y arquitectura hexagonal",
   "devDependencies": {
+    "@types/minimatch": "^6.0.0",
     "@types/node": "^20.0.0",
-    "typescript": "^5.0.0",
-    "vitest": "^1.0.0",
-    "eslint": "^8.0.0",
+    "@types/node-fetch": "^2.6.13",
+    "@types/normalize-package-data": "^2.4.4",
+    "@types/pretty-hrtime": "^1.0.3",
+    "@types/prop-types": "^15.7.15",
+    "@types/unist": "^3.0.3",
+    "@types/yargs": "^17.0.34",
+    "@types/yargs-parser": "^21.0.3",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0"
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0"
   }
 }
