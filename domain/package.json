@@ -5,7 +5,10 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
+    "clean": "powershell -ExecutionPolicy Bypass -File ./clean-build.ps1",
+    "clean:unix": "bash ./clean-build.sh",
     "build": "tsc",
+    "build:clean": "npm run clean && tsc",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "eslint src/",

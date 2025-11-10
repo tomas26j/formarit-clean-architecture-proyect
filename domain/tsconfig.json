@@ -4,8 +4,20 @@
     "declaration": true,
     "outDir": "dist",
     "rootDir": "src",
-    "noEmit": false
+    "noEmit": false,
+    "allowJs": false,
+    "declarationMap": true,
+    "sourceMap": true,
+    "types": ["node"],
+    "lib": ["ES2022"]
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts"]
+  "include": ["src/**/*.ts"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "**/*.js",
+    "**/*.d.ts"
+  ]
 }
