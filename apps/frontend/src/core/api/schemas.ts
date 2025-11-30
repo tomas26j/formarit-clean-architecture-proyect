@@ -115,3 +115,30 @@ export const availabilityQuerySchema = z.object({
   }
 )
 
+// Esquemas para autenticación
+export const loginSchema = z.object({
+  email: z.string().email('El email no es válido'),
+  password: z.string().min(6, 'La contraseña debe tener al menos 6 caracteres'),
+})
+
+export const registerSchema = z.object({
+  nombre: z.string().min(2, 'El nombre debe tener al menos 2 caracteres').max(100, 'El nombre no puede exceder 100 caracteres'),
+  email: z.string().email('El email no es válido'),
+  password: z.string().min(6, 'La contraseña debe tener al menos 6 caracteres'),
+  telefono: z.string().optional(),
+  rol: z.enum(['huesped', 'recepcionista', 'gerente', 'admin']).default('huesped'),
+})
+
+export const authResponseSchema = z.object({
+  usuario: z.object({
+    id: z.string(),
+    nombre: z.string(),
+    email: z.string(),
+    rol: z.string(),
+    activo: z.boolean(),
+  }),
+  token: z.string(),
+  expiraEn: z.string(),
+  permisos: z.array(z.string()),
+})
+

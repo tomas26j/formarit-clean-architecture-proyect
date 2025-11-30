@@ -1,4 +1,4 @@
-import { useParams, useSearchParams, useNavigate } from 'react-router-dom'
+import { useParams, useSearchParams, useNavigate, useLocation } from 'react-router-dom'
 import { useRoom } from '@/features/hotel/hooks/useRooms'
 import { useCreateReservation } from '@/features/reservation/hooks/useReservations'
 import { Button } from '@/components/atoms'
@@ -8,12 +8,14 @@ import { formatDateShort, calculateNights } from '@/core/utils/date'
 import { formatCurrency } from '@/core/utils/format'
 import { useToast } from '@/core/hooks/useToast'
 import { ApiClientError } from '@/core/api/client'
+import { useAuth } from '@/core/auth/AuthContext'
 import { useState } from 'react'
 
 export function RoomDetailPage() {
   const { id } = useParams<{ id: string }>()
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
+  const location = useLocation()
 
   const checkIn = searchParams.get('checkIn')
   const checkOut = searchParams.get('checkOut')
@@ -24,6 +26,7 @@ export function RoomDetailPage() {
   const { data: room, isLoading, isError } = useRoom(id || '')
   const createReservation = useCreateReservation()
   const toast = useToast()
+  const { user } = useAuth()
 
   const [isBooking, setIsBooking] = useState(false)
 
@@ -37,14 +40,19 @@ export function RoomDetailPage() {
       return
     }
 
+    if (!user) {
+      toast.error('Debes iniciar sesión para hacer una reserva')
+      navigate('/login', { state: { from: location } })
+      return
+    }
+
     setIsBooking(true)
     try {
-      // TODO: Obtener clienteId del usuario autenticado
-      const clienteId = 'default-client-id' // Temporal
-
+      // El backend usará automáticamente el userId del token JWT
+      // Pero podemos enviarlo también para que el esquema valide
       const result = await createReservation.mutateAsync({
         habitacionId: id,
-        clienteId,
+        clienteId: user.id, // Enviar el ID del usuario autenticado
         checkIn: new Date(checkIn).toISOString(),
         checkOut: new Date(checkOut).toISOString(),
         numeroHuespedes: adultos + ninos + bebes,

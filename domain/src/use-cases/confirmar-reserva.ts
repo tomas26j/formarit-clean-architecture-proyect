@@ -1,7 +1,7 @@
 import { Reserva, EstadoReserva } from "../entities/reservation.js";
 import { RepositorioReservas } from "../repositories/reserva-repository.js";
 import { RepositorioHabitaciones } from "../repositories/habitacion-repository.js";
-import { ServicioDisponibilidad } from "../services/disponibilidad-service.js";
+import { ServicioDisponibilidad } from "../services/disponibilidad-service(deprecated).js";
 
 // DTOs para el caso de uso
 export interface ConfirmarReservaCommand {

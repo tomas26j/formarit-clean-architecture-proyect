@@ -103,6 +103,84 @@ app.get('/api/reservas/disponibilidad', asyncHandler(async (req: Request, res: R
   res.json(resultado.data);
 }));
 
+// GET /api/habitaciones - Listar habitaciones (pública)
+app.get('/api/habitaciones', asyncHandler(async (req: Request, res: Response) => {
+  const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
+  const offset = req.query.offset ? parseInt(req.query.offset as string) : 0;
+
+  const resultado = await dependencias.repositorioHabitaciones.listar(limit, offset);
+  
+  if (resultado.isFailure()) {
+    return res.status(resultado.error.statusCode || 500).json({
+      error: {
+        message: resultado.error.message,
+        code: resultado.error.code || 'DOMAIN_ERROR',
+        timestamp: new Date().toISOString()
+      }
+    });
+  }
+
+  const habitaciones = resultado.data;
+  const habitacionesDTO = habitaciones.map((habitacion: any) => ({
+    id: habitacion.id,
+    numero: habitacion.numero,
+    tipo: habitacion.tipo.nombre,
+    precioBase: habitacion.precioBase.valor,
+    activa: habitacion.activa,
+    piso: habitacion.piso,
+    vista: habitacion.vista,
+    capacidad: habitacion.tipo.capacidad,
+    amenidades: habitacion.tipo.amenidades,
+  }));
+
+  res.json({
+    habitaciones: habitacionesDTO,
+    total: habitacionesDTO.length,
+    pagina: Math.floor(offset / limit) + 1,
+    limite: limit,
+  });
+}));
+
+// GET /api/habitaciones/:id - Ver detalle de habitación (pública)
+app.get('/api/habitaciones/:id', asyncHandler(async (req: Request, res: Response) => {
+  const resultado = await dependencias.repositorioHabitaciones.buscarPorId(req.params.id);
+  
+  if (resultado.isFailure()) {
+    return res.status(resultado.error.statusCode || 500).json({
+      error: {
+        message: resultado.error.message,
+        code: resultado.error.code || 'DOMAIN_ERROR',
+        timestamp: new Date().toISOString()
+      }
+    });
+  }
+
+  const habitacion = resultado.data;
+  if (!habitacion) {
+    return res.status(404).json({
+      error: {
+        message: 'Habitación no encontrada',
+        code: 'NOT_FOUND',
+        timestamp: new Date().toISOString()
+      }
+    });
+  }
+
+  const habitacionDTO = {
+    id: habitacion.id,
+    numero: habitacion.numero,
+    tipo: habitacion.tipo.nombre,
+    precioBase: habitacion.precioBase.valor,
+    activa: habitacion.activa,
+    piso: habitacion.piso,
+    vista: habitacion.vista,
+    capacidad: habitacion.tipo.capacidad,
+    amenidades: habitacion.tipo.amenidades,
+  };
+
+  res.json(habitacionDTO);
+}));
+
 // Middleware de autenticación para rutas protegidas
 app.use('/api', authMiddleware);
 

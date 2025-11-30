@@ -103,57 +103,10 @@ export const crearHabitacionesRouter = (deps: BackendDependencies): Router => {
     res.status(statusCodeExitoso).json(result.data);
   };
 
-  // GET /api/habitaciones
-  router.get('/', 
-    requirePermission('ver_habitaciones'),
-    asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
-      const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
-      const offset = req.query.offset ? parseInt(req.query.offset as string) : 0;
-
-      const resultado = await deps.repositorioHabitaciones.listar(limit, offset);
-      
-      if (resultado.isFailure()) {
-        throw createError(
-          resultado.error.message,
-          resultado.error.statusCode || 500,
-          resultado.error.code || 'DOMAIN_ERROR'
-        );
-      }
-
-      const habitaciones = resultado.data;
-      const habitacionesDTO = habitaciones.map(habitacionToDTO);
-
-      res.json({
-        habitaciones: habitacionesDTO,
-        total: habitacionesDTO.length,
-        pagina: Math.floor(offset / limit) + 1,
-        limite: limit,
-      });
-    })
-  );
-
-  // GET /api/habitaciones/:id
-  router.get('/:id', 
-    requirePermission('ver_habitaciones'),
-    asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
-      const resultado = await deps.repositorioHabitaciones.buscarPorId(req.params.id);
-      
-      if (resultado.isFailure()) {
-        throw createError(
-          resultado.error.message,
-          resultado.error.statusCode || 500,
-          resultado.error.code || 'DOMAIN_ERROR'
-        );
-      }
-
-      const habitacion = resultado.data;
-      if (!habitacion) {
-        throw createError('Habitación no encontrada', 404, 'NOT_FOUND');
-      }
-
-      res.json(habitacionToDTO(habitacion));
-    })
-  );
+  // NOTA: Las rutas GET /api/habitaciones y GET /api/habitaciones/:id 
+  // están definidas como públicas en index.ts (antes del middleware de autenticación)
+  // Por lo tanto, no se incluyen aquí para evitar duplicación.
+  // Solo se incluyen las rutas que requieren autenticación (POST, PUT, DELETE, etc.)
 
   // POST /api/habitaciones
   router.post('/', 

@@ -21,12 +21,28 @@ export const crearReservasRouter = (deps: BackendDependencies): Router => {
   // Esquemas de validación
   const crearReservaSchema = Joi.object({
     habitacionId: Joi.string().required(),
-    clienteId: Joi.string().required(),
-    checkIn: Joi.date().iso().required(),
-    checkOut: Joi.date().iso().greater(Joi.ref('checkIn')).required(),
+    clienteId: Joi.string().optional(), // Opcional porque se sobrescribe con el userId del token
+    checkIn: Joi.alternatives().try(
+      Joi.date().iso(),
+      Joi.string().isoDate() // Permitir strings ISO también
+    ).required(),
+    checkOut: Joi.alternatives().try(
+      Joi.date().iso(),
+      Joi.string().isoDate() // Permitir strings ISO también
+    ).required(),
     numeroHuespedes: Joi.number().integer().min(1).required(),
     observaciones: Joi.string().max(500).optional()
-  });
+  }).custom((value, helpers) => {
+    // Validar que checkOut sea posterior a checkIn
+    const checkIn = value.checkIn instanceof Date ? value.checkIn : new Date(value.checkIn);
+    const checkOut = value.checkOut instanceof Date ? value.checkOut : new Date(value.checkOut);
+    
+    if (checkOut <= checkIn) {
+      return helpers.error('any.invalid', { message: 'La fecha de check-out debe ser posterior a la fecha de check-in' });
+    }
+    
+    return value;
+  }, 'custom validation');
 
   const confirmarReservaSchema = Joi.object({
     metodoPago: Joi.string().valid('tarjeta_credito', 'tarjeta_debito', 'transferencia', 'efectivo').required(),
@@ -104,22 +120,73 @@ export const crearReservasRouter = (deps: BackendDependencies): Router => {
   router.post('/', 
     requirePermission('crear_reserva'),
     asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
-      const { error, value } = crearReservaSchema.validate(req.body);
+      // Validar que el usuario esté autenticado
+      if (!req.user || !req.user.userId) {
+        throw createError('Usuario no autenticado', 401, 'UNAUTHENTICATED');
+      }
+
+      // Usar el userId del token JWT como clienteId (más seguro)
+      const clienteId = req.user.userId;
+
+      const { error, value } = crearReservaSchema.validate({
+        ...req.body,
+        clienteId, // Sobrescribir el clienteId con el del usuario autenticado
+      });
       if (error) {
         throw createError(`Datos inválidos: ${error.details[0].message}`, 400, 'VALIDATION_ERROR');
+      }
+
+      // Convertir fechas si vienen como strings ISO
+      const checkIn = value.checkIn instanceof Date 
+        ? value.checkIn.toISOString() 
+        : new Date(value.checkIn).toISOString();
+      const checkOut = value.checkOut instanceof Date 
+        ? value.checkOut.toISOString() 
+        : new Date(value.checkOut).toISOString();
+
+      // Verificar que el usuario existe antes de crear la reserva
+      try {
+        const usuarioExiste = await deps.repositorioUsuarios.buscarPorId(clienteId);
+        if (!usuarioExiste) {
+          console.error(`Usuario no encontrado: ${clienteId}`);
+          throw createError('Usuario no encontrado. Por favor, inicia sesión nuevamente', 404, 'USER_NOT_FOUND');
+        }
+      } catch (error: any) {
+        // Si ya es un CustomError, relanzarlo
+        if (error.statusCode) {
+          throw error;
+        }
+        console.error('Error al verificar usuario:', error);
+        throw createError('Error al verificar el usuario', 500, 'USER_VERIFICATION_ERROR');
       }
 
       // Llamar al caso de uso real
       const resultado = await deps.crearReserva({
         habitacionId: value.habitacionId,
-        clienteId: value.clienteId,
-        checkIn: value.checkIn.toISOString(),
-        checkOut: value.checkOut.toISOString(),
+        clienteId: clienteId,
+        checkIn: checkIn,
+        checkOut: checkOut,
         numeroHuespedes: value.numeroHuespedes,
         observaciones: value.observaciones,
       });
 
-      manejarResultado(resultado, res, 201);
+      if (resultado.isFailure()) {
+        const error = resultado.error;
+        console.error('Error al crear reserva:', {
+          message: error.message,
+          code: error.code,
+          statusCode: error.statusCode,
+          clienteId,
+          habitacionId: value.habitacionId,
+        });
+        throw createError(
+          error.message || 'Error al crear la reserva',
+          error.statusCode || 500,
+          error.code || 'RESERVATION_CREATION_ERROR'
+        );
+      }
+
+      res.status(201).json(resultado.data);
     })
   );
 

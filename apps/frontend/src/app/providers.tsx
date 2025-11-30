@@ -1,6 +1,7 @@
 import { ReactNode, createContext, useState, useCallback } from 'react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ToastContainer, type ToastItem } from '@/components/atoms/Toast'
+import { AuthProvider } from '@/core/auth/AuthContext'
 
 interface ProvidersProps {
   children: ReactNode
@@ -66,10 +67,12 @@ export function Providers({ children }: ProvidersProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ToastContext.Provider value={toastValue}>
-        {children}
-        <ToastContainer toasts={toasts} onRemove={removeToast} />
-      </ToastContext.Provider>
+      <AuthProvider>
+        <ToastContext.Provider value={toastValue}>
+          {children}
+          <ToastContainer toasts={toasts} onRemove={removeToast} />
+        </ToastContext.Provider>
+      </AuthProvider>
     </QueryClientProvider>
   )
 }

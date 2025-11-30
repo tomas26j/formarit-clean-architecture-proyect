@@ -37,28 +37,36 @@ function getAuthToken(): string | null {
  */
 async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
-    let errorData: ApiError
+    let errorData: any
     try {
       errorData = await response.json()
     } catch {
       errorData = {
-        message: `Error ${response.status}: ${response.statusText}`,
-        status: response.status,
+        error: {
+          message: `Error ${response.status}: ${response.statusText}`,
+          code: 'UNKNOWN_ERROR',
+        },
       }
     }
+
+    // El backend devuelve errores en formato { error: { message, code, timestamp } }
+    const error = errorData.error || errorData
+    const message = error.message || errorData.message || `Error ${response.status}`
+    const code = error.code || errorData.code
 
     // Manejo especial para errores de autenticación
     if (response.status === 401) {
       localStorage.removeItem('auth_token')
-      // Opcional: redirigir al login
+      localStorage.removeItem('auth_user')
+      // Disparar evento para que el AuthContext se actualice
       window.dispatchEvent(new CustomEvent('auth:logout'))
     }
 
     throw new ApiClientError(
-      errorData.message,
-      errorData.status,
+      message,
+      response.status,
       errorData.errors,
-      errorData.code
+      code
     )
   }
 
